@@ -1,0 +1,60 @@
+doctype html
+html
+  head
+    title= title
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(name='keywords', content='程序员,产品经理,MonkeySay,Programmer,PM,Product,SNS')
+    meta(name='description', content='猿说是程序员聚集交流，共享代码的绝地学院')
+    script(src='/static/javascripts/jquery-2.1.1.min.js')
+    script(src='/static/javascripts/bootstrap.min.js')
+    script(src='/static/javascripts/jquery.zclip.min.js')
+    link(rel='stylesheet', href='/static/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/static/stylesheets/style.css')
+    style.
+      .laypage-main,
+      .laypage-main *{display:inline-block; *display:inline; *zoom:1; vertical-align:top;}
+      .laypage-main{margin:20px 0; border: 1px solid #428bca; border-right: none; border-bottom: none; font-size: 0;}
+      .laypage-main *{padding: 0 15px; line-height:28px; border-right: 1px solid #428bca; border-bottom: 1px solid #428bca; font-size:14px;}
+      .laypage-main .laypage-curr{background-color:#428bca; color:#fff;}
+  block header
+  body
+    nav.navbar.navbar-default.navbar-static-top(role='navigation')
+      .container
+        .navbar-header
+          a.navbar-brand(href='/twitters') 猿说
+        #bs-example-navbar-collapse-1(class='collapse navbar-collapse')
+          ul(class='nav navbar-nav')
+            li: a(href="/twitters") 广场
+            if (user)
+              li: a(href="/twitters?userid="+user.id) 我的碎语
+            if (user)
+              li: a(href="/reply/of/mine") 我的评论
+            li: a(href="/client/download") 客户端
+            li: a(href="/upload/pictures") 图片大厅
+          
+          form.navbar-form.navbar-left(role="search", action='/twitters/search', method='POST')
+            div.form-group
+              input.form-control(name='keyword',type="text", placeholder="关键词...")
+              button#searchBtn.btn.btn-default(type='submit')
+                span 搜索
+
+          ul.nav.navbar-nav.navbar-right
+            if user
+              li: a(href="#") #{user.get('username')}
+              li: a(href="/users/logout") 登出
+            else
+              li: a(href="/users/login") 登录
+              li: a(href="/users/register") 注册
+    .container(style='min-height:500px;')
+      h2=title
+      block content
+
+  block footer
+
+
+  block clarify
+    .container
+      center
+        script(type='text/javascript', src='https://tajs.qq.com/stats?sId=58725178', charset='UTF-8')
+        .row='Copyright ©bibodeng.com 2016 - now, All Rights Reserved'
+        .row='猿说 Powered By LeanCloud'

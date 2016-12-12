@@ -1,0 +1,23 @@
+extends layout
+
+block header
+  script(type='text/javascript').
+
+block content
+  #errMsg
+    if errMsg
+      pre= errMsg
+
+  div.container
+      #dataList.media-list
+        li.row(style='padding-bottom:15px; padding-top:15px;')
+          div.col-md-6
+            center
+              img(src='/static/images/iOSv1.0.png')
+              br
+              label 猿说iOS V1.0
+          div.col-md-6
+            center
+              img(src='/static/images/iOSv2.0.png')
+              br
+              label 猿说iOS V2.0 敬请期期待

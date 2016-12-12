@@ -1,0 +1,61 @@
+extends layout
+
+block header
+  script(type='text/javascript').
+    $(document).ready(function(){
+    });
+    
+    function reply_someone(to_uid, username){
+      $('#to_uid').val(to_uid);
+      $('#reply_content').val('@' + username + ' ');
+    }
+    function focus_reply(){
+      $('#reply_content').focus();
+    }
+
+block content
+  #errMsg
+    if errMsg
+      pre= errMsg
+  
+  hr
+  div.container
+      #dataList.media-list
+        li.row(style='border-bottom:thin solid #eee; padding-bottom:15px; padding-top:15px;')
+          div.col-md-1
+            img(src='/static/images/geek.jpg')
+          div.col-md-10
+            a(href='/twitters/page/1?userid=' + twitter.get('author').id)
+              label.media-heading= twitter.get('author').get('username')
+            div.row
+              div.col-md-8
+                | !{utils.markdown.toHTML(twitter.get('content'))}
+            div.row
+              span.col-md-2(style:'color:#ccc;')= utils.timefriendly(twitter.get('date'))
+              span.row.col-md-5.col-md-offset-3
+                a.col-md-3(href='javascript: void(0);', onclick='focus_reply()')
+                  span='回复(' + twitter.get('replynum') + ')'
+                if(twitter.get('author').id == user.id && twitter.get('status') == 1)
+                  a.col-md-4(href='/twitters/delete/' + twitter.id)
+                    span='删除'
+
+        div.container(style='padding-top:20px;')
+          form(action='/reply/to/' + twitter.id, method='POST')
+            .form-group.row
+              #name_div.col-md-1
+                label=user.get('username')+':'
+              #input_div.col-md-5
+                input#to_uid.form-control(type='hidden', name='touid',value=twitter.get('author').id)
+                if (twitter.get('status') == 1)
+                  input#reply_content.form-control(type='input', name='content')
+                else
+                  input#reply_content.form-control(type='input', name='content', disabled='disabled')
+              #submit_btn.col-md-1
+                if(twitter.get('status') == 1)
+                  input.btn.btn-default.reply_btn(type='submit', value='回复')
+                else
+                  input.btn.btn-default.reply_btn(type='submit', value='回复', disabled='disabled')
+          
+          div#reply_list.col-md-12
+            include reply
+

@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+  #errMsg
+    if errMsg
+      pre= errMsg
+  hr
+  form.form-horizontal(action='/users/login', method='POST')
+    .form-group.col-sm-8
+      label.col-sm-2.control-label 用户名
+      .col-sm-10: input.form-control(type='input', name='username')
+    .form-group.col-sm-8
+      label.col-sm-2.control-label 密码
+      .col-sm-10: input.form-control(type='password', name='password')
+    .form-group.col-sm-8
+      .col-sm-2
+      .col-sm-10
+        input.form-control.btn.btn-default(type='submit', value='登录')
+        br
+        .row
+          a.btn(href="/users/register") 没账号，去注册

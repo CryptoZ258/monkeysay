@@ -1,0 +1,42 @@
+extends layout
+
+block header
+
+block content
+  div.container
+    #errMsg
+      if errMsg
+        pre= errMsg
+    hr
+
+    div.container
+      #dataList.media-list
+        each reply in replies
+          li.row(style='border-bottom:thin solid #eee; padding-bottom:15px; padding-top:15px;')
+            div.col-md-3
+              .col-md-4
+                a(href='/twitters?userid='+reply.get('author').id)
+                  label= reply.get('author').get('username')
+              .col-md-3
+                label=' 回复 '
+              .col-md-4
+                a(href='/twitters?userid='+reply.get('touser').id)
+                  label= reply.get('touser').get('username')
+              // span#comment_author= reply.get('author').get('username')
+            div.col-md-8
+              span.col-md-7
+                | !{utils.markdown.toHTML(reply.get('content'))}
+              span.col-md-2(style:'color:#ccc;')= utils.timefriendly(reply.createdAt)
+              span.row.col-md-3
+                a.col-md-7(href='/twitters/' + reply.get('totid'))
+                  span='查看原文'
+                if(reply.get('status') == 1)
+                  a.col-md-5(href='/reply/delete/'+reply.id)
+                    span='删除'
+
+      #pager.container
+        div: | !{laypage}
+
+block footer
+
+

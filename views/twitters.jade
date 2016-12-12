@@ -1,0 +1,96 @@
+extends layout
+
+block header
+  script(type='text/javascript').
+    var isPreview = false;
+    $(document).ready(function(){
+    });
+    
+    function uploadfile(ev){
+      ev.preventDefault();
+    }
+
+    function setIsPreview(data){
+      isPreview = data;
+      $('#previewPanel').toggle(isPreview);
+      if(isPreview){
+        previewContent();
+      }
+    }
+
+    function previewContent(){
+      if (isPreview){
+        var tcontent = $('#content').val();
+        if(tcontent && tcontent != ''){
+          $.ajax({
+            type:'POST',
+            url: '/twitters/preview',
+            data:{
+              content: tcontent
+            },
+            success: function(data){
+              if(data && data != ''){
+                $('#previewPanel').html(data);
+                $('#previewPanel').show();
+              } else {
+                $('#previewPanel').hide();
+              }
+            }
+          });
+        }
+        else {
+          $('#previewPanel').hide();
+        }
+      }
+    }
+
+block content
+  div.container
+    #errMsg
+      if errMsg
+        pre= errMsg
+    hr
+    #searchTwitters.container
+      form#postForm(action='/twitters', method='POST')
+        .form-group.col-md-11
+          .col-md-1
+            label=user.get('username') + ':'
+          .col-md-7
+            textarea#content.form-control(type='input', name='content', rows='3', onkeyup="previewContent();" placeholder="发表你的见解，支持markdown")
+          .col-md-1
+            input.btn.btn-default(type='submit', value='发布')
+            <input type="checkbox" id="isPreview" style="margin-top:25px;" onclick="setIsPreview(this.checked);"/>预览
+      
+      div#previewPanel.col-md-11.jumbotron(style="display:none;")
+
+
+    div.container
+      hr
+      #dataList.media-list
+        each twitter in twitters
+          li.row(style='border-bottom:thin solid #eee; padding-bottom:15px; padding-top:15px;')
+            .col-md-1
+              button.btn.btn-primary.btn-circle
+                label= twitter.get('author').get('username')[0].toUpperCase()
+            div.col-md-10
+              a(href='/twitters?userid='+twitter.get('author').id)
+                label.media-heading= twitter.get('author').get('username')
+              .row
+                .div.col-md-8
+                  | !{utils.markdown.toHTML(twitter.get('content'))}
+              p.row
+                span.col-md-2(style='color:#aaa;')= utils.timefriendly(twitter.get('date'))
+                span.row.col-md-3.col-md-offset-3
+                  a.col-md-7(href='/twitters/' + twitter.id)
+                    span='回复(' + twitter.get('replynum') + ')'
+                  if(twitter.get('author').id == user.id)
+                    a.col-md-4(href='/twitters/delete/' + twitter.id)
+                      span='删除'
+      #pager.container
+        div
+          | !{laypage}
+
+
+block footer
+  //script(type='text/javascript',src='http://v3.jiathis.com/code/jia.js', charset='utf-8')
+

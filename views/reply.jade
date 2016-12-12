@@ -1,0 +1,34 @@
+block reply_list
+  h5 评论列表
+  each reply in replies 
+      ul#dataList.media-list
+
+        if(reply.get('status') == 1)
+          li.row(style='border-bottom:thin solid #eee; padding-bottom:15px; padding-top:15px;')
+            div.col-md-1
+              a(href='/twitters?userid='+reply.get('author').id)
+                abel= reply.get('author').get('username')
+              // span#comment_author= reply.get('author').get('username')
+            div.col-md-8
+              span.col-md-5
+                | !{utils.markdown.toHTML(reply.get('content'))}
+              span.col-md-2(style:'color:#ccc;')= utils.timefriendly(reply.createdAt)
+              span.row.col-md-3.col-md-offset-1
+                if(twitter.get('status')==1)
+                  span.col-md-6
+                    a(href='javascript:return void(0);', onclick='reply_someone(\'' + reply.get('author').id + '\',\''+reply.get('author').get('username')+'\')')
+                      span='回复'
+                  span.col-md-6
+                    a(href='/reply/delete/'+reply.id)
+                      span='删除'
+        
+        else
+          li.row(style='border-bottom:thin solid #eee; padding-bottom:15px; padding-top:15px;')
+            div.col-md-1
+              a(href='/twitters?userid='+reply.get('author').id)
+                abel= reply.get('author').get('username')
+            div.col-md-8
+              span.col-md-5.label.label-default 该评论已删除
+              span.col-md-2(style:'color:#ccc;')= utils.timefriendly(reply.createdAt)
+              span.row.col-md-3.col-md-offset-1
+              

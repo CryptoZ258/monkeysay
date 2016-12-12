@@ -1,0 +1,69 @@
+# 所有API均需设置HTTP请求头Header,包含 appid, nonce, sign 三个字段
+
+# 所有返回都是如下形式：
+status: 状态码(200-成功 其它-失败)
+msg: 状态消息(OK-成功，其它-失败)
+data: 返回内容(msg!=OK时，data是一个报错字符串)
+
+
+# 广场碎语
+GET https://monkeysay.leanapp.cn/api/twitters/page/:pageIndex
+url参数:
+pageIndex : 页码 如:1,2,3
+
+返回:
+status: 状态码
+msg: 状态消息
+data: 碎语列表
+
+
+# 单条碎语及其评论
+GET https://monkeysay.leanapp.cn/api/twitters/:tid
+url参数
+tid : 碎语id 如:57ebf4d3bf22ec005891039c
+
+返回:
+status: 状态码
+msg: 状态消息
+data: {twitter: 单条碎语, replies: 回复列表}
+
+# 发布碎语
+POST https://monkeysay.leanapp.cn/api/twitters
+form参数
+uid : 登录用户id 如: 57e7907ca22b9d006151a1b6
+content: 发布内容
+
+返回:
+status: 状态码
+msg: 状态消息
+data: {twitter: 单条碎语, replies: 回复列表}
+
+# 获取我的评论
+GET https://monkeysay.leanapp.cn/api/reply/of/mine/page/:pageIndex
+url参数
+pageIndex : 页码 如:1,2,3
+uid: 当前用户id 如: 57e7907ca22b9d006151a1b6
+
+返回:
+status: 状态码
+msg: 状态消息
+data: 回复列表
+
+# 发布评论
+POST https://monkeysay.leanapp.cn/api/reply/to/:tid
+
+url参数
+tid: 被评论推文id
+
+form参数
+uid: 评论人id
+touid: 被评论人id
+content: 评论内容
+
+返回
+status: 状态码
+msg: 状态消息
+data: 处理结果
+
+
+

@@ -1,0 +1,62 @@
+extends layout
+
+block header
+  script(type='text/javascript').
+    $(document).ready(function(){
+      console.log('begin');
+      $('.copy_btn').zclip({ 
+        path: "/static/javascripts/ZeroClipboard.swf", 
+        copy: function(){
+          return $(this).attr('data-url'); 
+    　　 },
+        afterCopy: function(){
+          // $('#errMsg').text('复制成功').fadeOut(2000);
+          // alert('已拷贝链接');
+          $("<span/>").insertAfter($(this)).text('复制成功').fadeOut(2000);
+        }
+      });
+    });
+    
+
+block content
+  div.container
+    #errMsg
+      if errMsg
+        pre= errMsg
+    hr
+
+  div.container
+    form(action='/upload/picture', method='POST', enctype='multipart/form-data')
+      .form-group.col-md-10
+        .col-md-5.col-md-offset-1
+          input.form-control(type='file', name='pic', style='width:200px;')
+        .col-md-2
+          input.btn.btn-default(type='submit', value='上传图片', onclick='uploadfile();')
+
+
+
+  div.container
+      hr
+      #dataList.media-list
+        each pic in pics
+          li.row(style='border-bottom:thin solid #eee; padding-bottom:15px; padding-top:15px;')
+            .col-md-1
+              button.btn.btn-primary.btn-circle
+                label= pic.get('author').get('username')[0].toUpperCase()
+            div.col-md-10
+              a(href='/twitters?userid='+pic.get('author').id)
+                label.media-heading= pic.get('author').get('username')
+              .row
+                .div.col-md-8
+                  img.img-rounded(src=pic.get('content').get('url'))
+              p.row
+                span.col-md-2(style='color:#aaa;')= utils.timefriendly(pic.createdAt)
+                span.row.col-md-3.col-md-offset-3
+                  a.copy_btn(data-url=pic.get('content').get('url') )
+                    span= '复制链接'
+                  if(pic.get('author').id == user.id)
+                    a.col-md-4(href='/upload/delete/' + pic.id)
+                      span='删除'
+      #pager.container
+        div
+          | !{laypage}
